@@ -1,0 +1,31 @@
+﻿// 'partial' permite que a classe seja dividida em vários arquivos. É uma palavra-chave que permite dividir a definição de uma classe, struct ou interface em vários arquivos. Isso é útil para organizar o código, especialmente em projetos grandes, onde diferentes partes da classe podem ser mantidas em arquivos separados. No exemplo acima, a classe 'Program' é marcada como 'partial', o que significa que sua definição pode ser dividida em vários arquivos. Cada arquivo pode conter parte da implementação da classe, e o compilador irá combinar todas as partes durante a compilação para formar a classe completa.
+partial class Program
+{
+    static void EscritaBinaria()
+    {
+        // 'using' é uma construção que garante que o objeto seja corretamente descartado após o uso. Ele é usado para gerenciar recursos, como arquivos, conexões de banco de dados ou fluxos de entrada/saída, garantindo que eles sejam liberados mesmo que ocorra uma exceção. No exemplo abaixo, o 'using' é utilizado para criar um bloco de código onde o objeto 'fluxoDeEntrada' e 'fs' são instanciados. Quando o bloco de código é concluído, seja normalmente ou devido a uma exceção, os objetos serão automaticamente descartados, liberando os recursos associados a eles.
+        using (var fs = new FileStream("contaCorrente.txt", FileMode.Create)) // FileStream é uma classe que fornece um fluxo de bytes para ler e escrever em arquivos. Ele é usado para acessar arquivos no sistema de arquivos, permitindo a leitura e escrita de dados em um formato binário. No exemplo abaixo, o FileStream é utilizado para criar um arquivo chamado "contaCorrente.txt" no modo de criação (FileMode.Create), o que significa que se o arquivo já existir, ele será sobrescrito. O FileStream é então passado para o BinaryWriter, que é usado para escrever dados binários no arquivo.
+        using (var escritor = new BinaryWriter(fs)) // BinaryWriter é uma classe que fornece métodos para escrever dados primitivos em um fluxo de saída de forma binária. Ele é usado para escrever dados em um formato que pode ser lido posteriormente por um BinaryReader, garantindo que os dados sejam armazenados de maneira eficiente e compacta. No exemplo abaixo, o BinaryWriter é utilizado para escrever informações sobre uma conta corrente, como número da agência, número da conta, saldo e nome do titular, em um arquivo chamado "contaCorrente.txt". Cada chamada ao método Write do BinaryWriter escreve os dados no formato binário correspondente ao tipo de dado fornecido.
+        {
+            escritor.Write(456);    // Número da agência
+            escritor.Write(546544);  // Número da conta
+            escritor.Write(4000.50);  // Saldo
+            escritor.Write("Gustavo Braga");
+        }
+    }
+
+    static void LeituraBinaria()
+    {
+        // 'FileStream' é uma classe que fornece um fluxo de bytes para ler e escrever em arquivos. Ele é usado para acessar arquivos no sistema de arquivos, permitindo a leitura e escrita de dados em um formato binário. No exemplo abaixo, o FileStream é utilizado para abrir um arquivo chamado "contaCorrente.txt" no modo de abertura (FileMode.Open), o que significa que o arquivo deve existir para ser aberto. O FileStream é então passado para o BinaryReader, que é usado para ler dados binários do arquivo.
+        using (var fs = new FileStream("contaCorrente.txt", FileMode.Open))
+        using (var leitor = new BinaryReader(fs)) // BinaryReader é uma classe que fornece métodos para ler dados primitivos de um fluxo de entrada de forma binária. Ele é usado para ler dados que foram escritos usando um BinaryWriter, garantindo que os dados sejam lidos corretamente no formato original. No exemplo abaixo, o BinaryReader é utilizado para ler informações sobre uma conta corrente, como número da agência, número da conta, saldo e nome do titular, de um arquivo chamado "contaCorrente.txt". Cada chamada ao método Read do BinaryReader lê os dados no formato binário correspondente ao tipo de dado esperado.
+        {
+            var agencia = leitor.ReadInt32(); // ReadInt32 é um método da classe BinaryReader que lê um valor inteiro de 32 bits do fluxo de entrada. Ele é usado para ler dados binários que foram escritos usando o método Write do BinaryWriter, garantindo que os dados sejam lidos corretamente no formato original. No exemplo abaixo, o ReadInt32 é utilizado para ler o número da agência e o número da conta, que foram escritos como inteiros de 32 bits no arquivo "contaCorrente.txt". O resultado é armazenado em variáveis do tipo int.
+            var numeroConta = leitor.ReadInt32(); // ReadInt32 é um método da classe BinaryReader que lê um valor inteiro de 32 bits do fluxo de entrada. Ele é usado para ler dados binários que foram escritos usando o método Write do BinaryWriter, garantindo que os dados sejam lidos corretamente no formato original. No exemplo abaixo, o ReadInt32 é utilizado para ler o número da agência e o número da conta, que foram escritos como inteiros de 32 bits no arquivo "contaCorrente.txt". O resultado é armazenado em variáveis do tipo int.
+            var saldo = leitor.ReadDouble(); // ReadDouble é um método da classe BinaryReader que lê um valor de ponto flutuante de 64 bits (double) do fluxo de entrada. Ele é usado para ler dados binários que foram escritos usando o método Write do BinaryWriter, garantindo que os dados sejam lidos corretamente no formato original. No exemplo abaixo, o ReadDouble é utilizado para ler o saldo da conta corrente, que foi escrito como um valor de ponto flutuante de 64 bits no arquivo "contaCorrente.txt". O resultado é armazenado em uma variável do tipo double.
+            var titular = leitor.ReadString(); // ReadString é um método da classe BinaryReader que lê uma string do fluxo de entrada. Ele é usado para ler dados binários que foram escritos usando o método Write do BinaryWriter, garantindo que os dados sejam lidos corretamente no formato original. No exemplo abaixo, o ReadString é utilizado para ler o nome do titular da conta corrente, que foi escrito como uma string no arquivo "contaCorrente.txt". O resultado é armazenado em uma variável do tipo string.
+
+            Console.WriteLine($"{agencia}/{numeroConta} {titular} {saldo:F2}");
+        }
+    }
+}
